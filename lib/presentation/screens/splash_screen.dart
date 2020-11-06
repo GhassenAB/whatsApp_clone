@@ -15,7 +15,7 @@ class _SplashScreenState extends State<SplashScreen> {
       Navigator.pushAndRemoveUntil(
         context,
         MaterialPageRoute(
-          builder: (_) => RegistrationScreen(),
+          builder: (_) => WelcomeScreen(),
         ),
         (route) => false,
       );
