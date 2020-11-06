@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:whatsapp_clone/presentation/presentation.dart';
 import 'package:whatsapp_clone/presentation/widgets/theme/style.dart';
-
-import 'screens.dart';
 
 class WelcomeScreen extends StatelessWidget {
   @override
