@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
+import 'package:whatsapp_clone/presentation/presentation.dart';
 import 'package:whatsapp_clone/presentation/widgets/theme/style.dart';
 
 class PhoneVerificationPage extends StatefulWidget {
@@ -51,7 +52,14 @@ class _PhoneVerificationPageState extends State<PhoneVerificationPage> {
                   alignment: Alignment.bottomCenter,
                   child: MaterialButton(
                     color: greenColor,
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => SetInitialProfilePage(),
+                        ),
+                      );
+                    },
                     child: Text(
                       "Next",
                       style: TextStyle(
