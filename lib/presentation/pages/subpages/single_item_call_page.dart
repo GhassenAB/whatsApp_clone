@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:whatsapp_clone/presentation/widgets/theme/style.dart';
 
-class SingleItemChatPage extends StatelessWidget {
+class SingleItemCallPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -26,15 +27,27 @@ class SingleItemChatPage extends StatelessWidget {
                     style:
                         TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
                   ),
-                  Text(
-                    'Hi there i\'m using this app',
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
+                  Row(
+                    children: [
+                      Icon(
+                        Icons.call_received,
+                        color: primaryColor,
+                        size: 16.0,
+                      ),
+                      Text(
+                        'Yesterday',
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ],
                   ),
                 ],
               ),
               Spacer(),
-              Text('12:47 AM')
+              Icon(
+                Icons.call,
+                color: primaryColor,
+              )
             ],
           ),
           Padding(
