@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
-class SingleItemChatPage extends StatelessWidget {
+class SingleItemStoryPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(left: 10.0, top: 4.0),
+      padding: const EdgeInsets.only(left: 10.0),
       child: Column(
         children: [
           Row(
@@ -27,14 +27,12 @@ class SingleItemChatPage extends StatelessWidget {
                         TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
                   ),
                   Text(
-                    'Hi there i\'m using this app',
+                    '12:47 AM',
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                   ),
                 ],
               ),
-              Spacer(),
-              Text('12:47 AM')
             ],
           ),
           Padding(
