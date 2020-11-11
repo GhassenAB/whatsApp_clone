@@ -46,6 +46,7 @@ class FirebaseRemoteDataSourceImpl implements FirebaseRemoteDataSource {
   Future<void> signInWithPhoneNumber(String smsPinCode) async {
     final AuthCredential authCredential = PhoneAuthProvider.credential(
         verificationId: _verificationId, smsCode: smsPinCode);
+    await auth.signInWithCredential(authCredential);
   }
 
   @override

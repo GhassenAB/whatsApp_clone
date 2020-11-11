@@ -1,70 +1,73 @@
 import 'package:flutter/material.dart';
-import 'package:whatsapp_clone/presentation/presentation.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:whatsapp_clone/presentation/bloc/phone_auth/phone_auth_cubit.dart';
 import 'package:whatsapp_clone/presentation/widgets/theme/style.dart';
 
 class SetInitialProfilePage extends StatefulWidget {
+  final String phoneNumber;
+
+  const SetInitialProfilePage({Key key, this.phoneNumber}) : super(key: key);
+
   @override
   _SetInitialProfilePageState createState() => _SetInitialProfilePageState();
 }
 
 class _SetInitialProfilePageState extends State<SetInitialProfilePage> {
+  String get _phoneNumber => widget.phoneNumber;
   TextEditingController _nameController = TextEditingController();
+
+  @override
+  void dispose() {
+    _nameController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SafeArea(
-        child: Container(
-          margin: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 20.0),
-          child: Column(
-            children: [
-              Text(
-                'Profile Info',
-                style: TextStyle(
-                  fontSize: 18.0,
+      body: Container(
+        margin: EdgeInsets.symmetric(horizontal: 20, vertical: 40),
+        child: Column(
+          children: <Widget>[
+            Text(
+              "Profile Info",
+              style: TextStyle(
+                color: greenColor,
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            SizedBox(
+              height: 20,
+            ),
+            Text(
+              "Please provide your name and an optional Profile photo",
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontSize: 16,
+              ),
+            ),
+            SizedBox(
+              height: 30,
+            ),
+            _rowWidget(),
+            Expanded(
+              child: Align(
+                alignment: Alignment.bottomCenter,
+                child: MaterialButton(
                   color: greenColor,
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-              SizedBox(
-                height: 30,
-              ),
-              Text(
-                "Please provide your name and an optional Profile photo",
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: 15,
-                ),
-              ),
-              SizedBox(
-                height: 30,
-              ),
-              _rowWidget(),
-              Expanded(
-                child: Align(
-                  alignment: Alignment.bottomCenter,
-                  child: MaterialButton(
-                    color: greenColor,
-                    onPressed: () {
-                      Navigator.pushAndRemoveUntil(
-                        context,
-                        MaterialPageRoute(
-                          builder: (_) => HomeScreen(),
-                        ),
-                        (route) => false,
-                      );
-                    },
-                    child: Text(
-                      "Next",
-                      style: TextStyle(
-                        fontSize: 18,
-                        color: Colors.white,
-                      ),
+                  onPressed: _submitProfileInfo,
+                  child: Text(
+                    "Next",
+                    style: TextStyle(
+                      fontSize: 18,
+                      color: Colors.white,
                     ),
                   ),
                 ),
-              )
-            ],
-          ),
+              ),
+            )
+          ],
         ),
       ),
     );
@@ -109,9 +112,12 @@ class _SetInitialProfilePageState extends State<SetInitialProfilePage> {
     );
   }
 
-  @override
-  void dispose() {
-    _nameController.dispose();
-    super.dispose();
+  void _submitProfileInfo() {
+    if (_nameController.text.isNotEmpty) {
+      BlocProvider.of<PhoneAuthCubit>(context).submitProfileInfo(
+          profileUrl: "",
+          phoneNumber: _phoneNumber,
+          name: _nameController.text);
+    }
   }
 }
