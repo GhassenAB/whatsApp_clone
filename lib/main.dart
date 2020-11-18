@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:whatsapp_clone/data/models/user_model.dart';
 import 'package:whatsapp_clone/presentation/bloc/auth/auth_cubit.dart';
+import 'package:whatsapp_clone/presentation/bloc/get_device_number/get_device_number_cubit.dart';
+import 'package:whatsapp_clone/presentation/bloc/user/user_cubit.dart';
 import 'package:whatsapp_clone/presentation/bloc/whats_app_observer.dart';
 import 'package:whatsapp_clone/presentation/presentation.dart';
 import 'package:whatsapp_clone/presentation/widgets/theme/style.dart';
@@ -27,7 +30,13 @@ class MyApp extends StatelessWidget {
         ),
         BlocProvider(
           create: (_) => di.sl<PhoneAuthCubit>(),
-        )
+        ),
+        BlocProvider<UserCubit>(
+          create: (_) => di.sl<UserCubit>()..getAllUsers(),
+        ),
+        BlocProvider<GetDeviceNumberCubit>(
+          create: (_) => di.sl<GetDeviceNumberCubit>(),
+        ),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
@@ -38,7 +47,19 @@ class MyApp extends StatelessWidget {
             return BlocBuilder<AuthCubit, AuthState>(
               builder: (context, authState) {
                 if (authState is Authenticated) {
-                  return HomeScreen(uid: authState.uid);
+                  return BlocBuilder<UserCubit, UserState>(
+                    builder: (context, userState) {
+                      if (userState is UserLoaded) {
+                        final currentUserInfo = userState.users.firstWhere(
+                            (user) => user.uid == authState.uid,
+                            orElse: () => UserModel());
+                        return HomeScreen(
+                          userInfo: currentUserInfo,
+                        );
+                      }
+                      return Container();
+                    },
+                  );
                 }
                 if (authState is UnAuthenticated) {
                   return WelcomeScreen();

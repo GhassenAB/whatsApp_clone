@@ -2,6 +2,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:whatsapp_clone/data/datasource/firebase_remote_datasource.dart';
 import 'package:whatsapp_clone/data/models/user_model.dart';
+import 'package:whatsapp_clone/domain/entities/my_chat_entity.dart';
+import 'package:whatsapp_clone/domain/entities/text_message_entity.dart';
 import 'package:whatsapp_clone/domain/entities/user_entity.dart';
 
 class FirebaseRemoteDataSourceImpl implements FirebaseRemoteDataSource {
@@ -83,5 +85,99 @@ class FirebaseRemoteDataSourceImpl implements FirebaseRemoteDataSource {
       codeSent: phoneCodeSent,
       codeAutoRetrievalTimeout: phoneCodeAutoRetrievalTimeout,
     );
+  }
+
+  @override
+  Future<void> addToMyChat(MyChatEntity myChatEntity) {
+    // TODO: implement addToMyChat
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<void> createOneToOneChatChannel(String uid, String otherUid) {
+    final userCollectionRef = fireStore.collection("users");
+    final oneToOneChatChannelRef = fireStore.collection("myChatChannel");
+
+    userCollectionRef
+        .doc(uid)
+        .collection('engagedChatChannel')
+        .doc(otherUid)
+        .get()
+        .then(
+      (chatChannelDoc) {
+        if (chatChannelDoc.exists) {
+          return;
+        }
+
+        final _chatChannelId = oneToOneChatChannelRef.doc().id;
+        var channelMap = {
+          'channelId': _chatChannelId,
+          'channelType': "oneToOneChat",
+        };
+
+        oneToOneChatChannelRef.doc(_chatChannelId).set(channelMap);
+
+        userCollectionRef
+            .doc(uid)
+            .collection('engagedChatChannel')
+            .doc(otherUid)
+            .set(channelMap);
+
+        userCollectionRef
+            .doc(otherUid)
+            .collection('engagedChatChannel')
+            .doc(uid)
+            .set(channelMap);
+
+        return;
+      },
+    );
+
+    return Future.value(null);
+  }
+
+  @override
+  Stream<List<UserEntity>> getAllUsers() {
+    final userCollectionRef = fireStore.collection("users");
+    return userCollectionRef.snapshots().map((querySnapshot) {
+      return querySnapshot.docs
+          .map((docQuerySnapshot) => UserModel.fromSnapshot(docQuerySnapshot))
+          .toList();
+    });
+  }
+
+  @override
+  Stream<List<TextMessageEntity>> getMessages() {
+    // TODO: implement getMessages
+    throw UnimplementedError();
+  }
+
+  @override
+  Stream<List<MyChatEntity>> getMyChat(String uid) {
+    // TODO: implement getMyChat
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<String> getOneToOneSingleUserChannelId(String uid, String otherUid) {
+    final userCollectionRef = fireStore.collection('users');
+    return userCollectionRef
+        .doc(uid)
+        .collection('engagedChatChannel')
+        .doc(otherUid)
+        .get()
+        .then((engagedChatChannel) {
+      if (engagedChatChannel.exists) {
+        return engagedChatChannel.data()['channelId'];
+      }
+      return Future.value(null);
+    });
+  }
+
+  @override
+  Future<void> sendTextMessage(
+      TextMessageEntity textMessageEntity, String channelId) {
+    // TODO: implement sendTextMessage
+    throw UnimplementedError();
   }
 }
